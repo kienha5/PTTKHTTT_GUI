@@ -144,6 +144,24 @@
             padding: 4px 10px;
             border-radius: 6px;
         }
+
+        .btn-logout {
+            background: transparent;
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+            margin-left: 12px;
+        }
+
+        .btn-logout:hover {
+            background: var(--danger);
+            color: white;
+        }
     </style>
 </head>
 
@@ -161,7 +179,7 @@
             </div>
             <ul class="sidebar-menu">
                 <li>
-                    <a href="room-list.html">
+                    <a href="dashboard-sale.html">
                         🏠 Dashboard
                     </a>
                 </li>
@@ -181,7 +199,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="dang-ky-tra-phong.html">
                         🚪 Đăng ký trả phòng
                     </a>
                 </li>
@@ -205,6 +223,7 @@
                         <br>
                         Nhân viên Sale
                     </div>
+                    <button class="btn-logout" onclick="logout()">Đăng xuất</button>
                 </div>
             </header>
 
@@ -589,6 +608,11 @@
             document.getElementById('step-3').className = "step-content";
             document.getElementById('request-details-card').style.display = 'none';
             document.getElementById('search-input').value = "YCT-10023";
+        }
+
+        function logout() {
+            localStorage.removeItem('user_role');
+            window.location.href = 'dang-nhap.html';
         }
     </script>
 </body>

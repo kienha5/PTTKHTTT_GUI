@@ -274,6 +274,24 @@
             font-weight: 500;
             margin-bottom: 20px;
         }
+
+        .btn-logout {
+            background: transparent;
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+            margin-left: 12px;
+        }
+
+        .btn-logout:hover {
+            background: var(--danger);
+            color: white;
+        }
     </style>
 </head>
 
@@ -291,7 +309,7 @@
             </div>
             <ul class="sidebar-menu">
                 <li>
-                    <a href="room-list.html">
+                    <a href="dashboard-sale.html">
                         🏠 Dashboard
                     </a>
                 </li>
@@ -311,7 +329,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="dang-ky-tra-phong.html">
                         🚪 Đăng ký trả phòng
                     </a>
                 </li>
@@ -335,6 +353,7 @@
                         <br>
                         Nhân viên Sale
                     </div>
+                    <button class="btn-logout" onclick="logout()">Đăng xuất</button>
                 </div>
             </header>
 
@@ -424,11 +443,11 @@
                             <div class="grid-3">
                                 <div class="form-group">
                                     <label>Khoảng giá tối đa (VND/tháng)</label>
-                                    <select class="select" id="crit-price" onchange="triggerFilter()">
+                                    <select class="select" id="crit-price">
                                         <option value="99999999">Mọi khoảng giá</option>
-                                        <option value="2000000">Dưới 2,000,000</option>
-                                        <option value="3000000">Dưới 3,000,000</option>
-                                        <option value="4000000">Dưới 4,000,000</option>
+                                        <option value="1800000">Dưới 1,800,000 đ</option>
+                                        <option value="2000000">Dưới 2,000,000 đ</option>
+                                        <option value="2500000">Dưới 2,500,000 đ</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -461,35 +480,7 @@
                             <h3 style="margin-bottom: 4px; display: flex; align-items: center; gap: 8px;">🔍 Phòng phù hợp gợi ý</h3>
                             <p style="color: var(--gray-500); font-size: 14px; margin-bottom: 16px;">Vui lòng chọn phòng dự kiến cho khách hàng từ danh sách realtime bên dưới</p>
 
-                            <div class="lookup-container">
-                                <!-- Filter sidebar for TraCuuPhong component wrapper -->
-                                <div class="lookup-sidebar">
-                                    <h4 style="margin-bottom: 12px; font-size: 14px; color: var(--gray-700);">Bộ lọc nhanh phòng</h4>
-                                    <div style="display: flex; flex-direction: column; gap: 12px;">
-                                        <div>
-                                            <label style="font-size: 12px; font-weight:600; display:block; margin-bottom:4px;">Trạng thái phòng</label>
-                                            <select class="select" style="padding: 8px 10px; font-size: 13px;" disabled>
-                                                <option selected>Chỉ hiển thị phòng Trống</option>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label style="font-size: 12px; font-weight:600; display:block; margin-bottom:4px;">Sức chứa</label>
-                                            <input type="number" class="input" style="padding: 8px 10px; font-size: 13px;" id="lookup-capacity" placeholder="Số giường tối thiểu" min="1" value="1" oninput="triggerFilter()">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Room Results -->
-                                <div>
-                                    <div class="room-cards-grid" id="room-results-container">
-                                        <!-- Will render rooms dynamically -->
-                                    </div>
-                                    <div id="no-rooms-alert" style="display:none; text-align: center; padding: 32px; background: var(--gray-50); border-radius: 12px; border: 1px dashed var(--gray-300);">
-                                        <p style="font-weight: 600; color: var(--gray-600);">❌ Không tìm thấy phòng/giường phù hợp</p>
-                                        <p style="font-size: 13px; color: var(--gray-500); margin-top: 4px;">Gợi ý: Thử nới lỏng các tiêu chí lọc ở trên</p>
-                                    </div>
-                                </div>
-                            </div>
+                            <div id="tra-cuu-component-wrapper"></div>
                         </div>
 
                         <!-- Action Buttons -->
@@ -608,85 +599,11 @@
         </div>
     </div>
 
-    <!-- DETAIL PANEL SLIDER (TraCuuPhong Sidepanel) -->
-    <div class="detail-panel-backdrop" id="panel-backdrop" onclick="closeDetailPanel()"></div>
-    <div class="detail-panel" id="detail-panel">
-        <button class="panel-close-btn" onclick="closeDetailPanel()">×</button>
-        <div class="panel-title">
-            <span>🛏</span> Chi tiết phòng <span id="panel-room-code" style="color: var(--primary)">P101</span>
-        </div>
-        <div style="overflow-y: auto; flex: 1; padding-right: 4px;">
-            <div style="background: var(--gray-100); height: 180px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-weight: 600; color: var(--gray-500); overflow: hidden; border: 1px solid var(--gray-200);">
-                🖼 Ảnh phòng Homestay Dorm
-            </div>
-            
-            <div class="detail-grid">
-                <div class="detail-item">
-                    <label>Khu vực</label>
-                    <div class="detail-value" id="panel-area">Khu A</div>
-                </div>
-                <div class="detail-item">
-                    <label>Loại phòng</label>
-                    <div class="detail-value" id="panel-type">Nam</div>
-                </div>
-            </div>
-
-            <div class="detail-grid">
-                <div class="detail-item">
-                    <label>Sức chứa</label>
-                    <div class="detail-value" id="panel-capacity">6 giường</div>
-                </div>
-                <div class="detail-item">
-                    <label>Đơn giá</label>
-                    <div class="detail-value" style="color: var(--primary); font-weight: 700;" id="panel-price">1,800,000 VND</div>
-                </div>
-            </div>
-
-            <div class="detail-item">
-                <label>Trạng thái</label>
-                <div>
-                    <span class="badge status-empty">Trống</span>
-                </div>
-            </div>
-
-            <div class="detail-item">
-                <label>Tiện ích có sẵn</label>
-                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                    <span class="badge" style="background: var(--gray-100); font-weight: 500; font-size:12px;">❄ Điều hòa</span>
-                    <span class="badge" style="background: var(--gray-100); font-weight: 500; font-size:12px;">🏍 Bãi xe</span>
-                    <span class="badge" style="background: var(--gray-100); font-weight: 500; font-size:12px;">⚡ Điện nước giá rẻ</span>
-                </div>
-            </div>
-
-            <div class="detail-item">
-                <label>Lịch sử trạng thái phòng</label>
-                <div class="timeline">
-                    <div class="timeline-item">
-                        <div class="timeline-date">01/06/2026 09:00</div>
-                        <div class="timeline-title">Cập nhật bởi Quản lý</div>
-                        <p style="font-size: 13px; color: var(--gray-600)">Chuyển trạng thái từ Bảo trì sang Trống sau khi bảo dưỡng điều hòa.</p>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-date">25/05/2026 14:00</div>
-                        <div class="timeline-title">Hệ thống bảo trì tự động</div>
-                        <p style="font-size: 13px; color: var(--gray-600)">Khóa phòng để vệ sinh định kỳ.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Import component Javascript -->
+    <script src="../assets/js/tra-cuu-phong.js"></script>
 
     <!-- CLIENT SCRIPT FOR SIMULATED ACTIONS -->
     <script>
-        // Mock rooms database
-        const roomsDatabase = [
-            { id: "P101", area: "Khu A", type: "Nam", capacity: 6, price: 1800000, status: "Trống", amenities: ["Điều hòa", "Gửi xe"] },
-            { id: "P102", area: "Khu A", type: "Nữ", capacity: 4, price: 2000000, status: "Trống", amenities: ["Điều hòa", "Gửi xe", "Ban công"] },
-            { id: "P103", area: "Khu B", type: "Nam", capacity: 8, price: 1500000, status: "Trống", amenities: ["Gửi xe", "Yên tĩnh"] },
-            { id: "P104", area: "Khu B", type: "Nữ", capacity: 6, price: 1700000, status: "Trống", amenities: ["Điều hòa", "Yên tĩnh"] },
-            { id: "P105", area: "Khu C", type: "Hỗn hợp", capacity: 4, price: 2500000, status: "Trống", amenities: ["Điều hòa", "Tủ lạnh", "Ban công"] }
-        ];
-
         let selectedRoomId = null;
 
         // Set default date for "Ngày dự kiến vào ở" to tomorrow
@@ -694,105 +611,67 @@
         tomorrow.setDate(tomorrow.getDate() + 1);
         document.getElementById('crit-date').value = tomorrow.toISOString().split('T')[0];
 
-        // Trigger filter initially to display all rooms
+        // Initialize the reusable TraCuuPhong component
+        initTraCuuPhong('tra-cuu-component-wrapper', {
+            mode: 'select',
+            onSelect: selectRoom
+        });
+
+        // Trigger filter to sync with component filters
         function triggerFilter() {
             const area = document.getElementById('crit-area').value;
             const type = document.getElementById('crit-type').value;
-            const priceMax = parseInt(document.getElementById('crit-price').value);
-            const minCapacity = parseInt(document.getElementById('lookup-capacity').value) || 1;
+            const priceMax = document.getElementById('crit-price').value;
+            const occupants = parseInt(document.getElementById('crit-occupants').value) || 1;
             const genderFilter = document.getElementById('cust-gender').value;
 
-            // Simple search filter matching
-            const filtered = roomsDatabase.filter(room => {
-                if (area && room.area !== area) return false;
-                if (type && room.type !== type) return false;
-                if (room.price > priceMax) return false;
-                if (room.capacity < minCapacity) return false;
-                
-                // If gender is selected, show compatible room type or general mixed room
-                if (genderFilter && room.type !== "Hỗn hợp" && room.type !== genderFilter) return false;
+            const compArea = document.getElementById('filter-area');
+            const compType = document.getElementById('filter-type');
+            const compPrice = document.getElementById('filter-price');
+            const compCapacity = document.getElementById('filter-capacity');
 
-                return true;
-            });
-
-            renderRooms(filtered);
-        }
-
-        // Render rooms in grid
-        function renderRooms(rooms) {
-            const container = document.getElementById('room-results-container');
-            const alertBox = document.getElementById('no-rooms-alert');
-            container.innerHTML = '';
-
-            if (rooms.length === 0) {
-                container.style.display = 'none';
-                alertBox.style.display = 'block';
-                document.getElementById('btn-next-step').disabled = true;
-                return;
+            if (compArea) compArea.value = area;
+            
+            if (compType) {
+                if (type) {
+                    compType.value = type;
+                } else if (genderFilter) {
+                    compType.value = genderFilter;
+                } else {
+                    compType.value = "";
+                }
             }
 
-            container.style.display = 'grid';
-            alertBox.style.display = 'none';
-
-            rooms.forEach(room => {
-                const isSelected = room.id === selectedRoomId;
-                const card = document.createElement('div');
-                card.className = `room-card ${isSelected ? 'selected' : ''}`;
-                card.onclick = () => selectRoom(room.id);
-
-                card.innerHTML = `
-                    <div class="room-card-header">
-                        <span class="room-code">${room.id}</span>
-                        <span class="badge status-empty">${room.status}</span>
-                    </div>
-                    <div class="room-info-row">📍 Khu vực: <strong>${room.area}</strong></div>
-                    <div class="room-info-row">🛏 Loại: <strong>Phòng ${room.type}</strong></div>
-                    <div class="room-info-row">👥 Sức chứa: <strong>${room.capacity} giường</strong></div>
-                    <div class="room-price">${room.price.toLocaleString('vi-VN')} đ/tháng</div>
-                    <button class="btn btn-sm btn-primary" style="margin-top: 12px; width: 100%; padding: 6px;" onclick="event.stopPropagation(); showDetailPanel('${room.id}')">👁 Xem chi tiết</button>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        // Handle selecting room
-        function selectRoom(roomId) {
-            selectedRoomId = roomId;
-            // Update UI class
-            const cards = document.querySelectorAll('.room-card');
-            cards.forEach(card => {
-                if (card.querySelector('.room-code').innerText === roomId) {
-                    card.classList.add('selected');
-                } else {
-                    card.classList.remove('selected');
+            if (compPrice) {
+                let valToSet = "99999999";
+                if (priceMax === "1800000" || priceMax === "2000000" || priceMax === "2500000") {
+                    valToSet = priceMax;
+                } else if (priceMax === "3000000" || priceMax === "4000000") {
+                    valToSet = "99999999";
                 }
-            });
+                compPrice.value = valToSet;
+            }
+
+            if (compCapacity) {
+                let capVal = "";
+                if (occupants <= 4 && occupants > 0) capVal = "4";
+                else if (occupants <= 6) capVal = "6";
+                else if (occupants <= 8) capVal = "8";
+                compCapacity.value = capVal;
+            }
+
+            // Trigger change event to re-render component
+            if (compArea) compArea.dispatchEvent(new Event('change'));
+        }
+
+        // Handle selecting room from component
+        function selectRoom(room) {
+            selectedRoomId = room.id;
             document.getElementById('btn-next-step').disabled = false;
-        }
-
-        // Open TraCuuPhong detail slider
-        function showDetailPanel(roomId) {
-            const room = roomsDatabase.find(r => r.id === roomId);
-            if (!room) return;
-
-            document.getElementById('panel-room-code').innerText = room.id;
-            document.getElementById('panel-area').innerText = room.area;
-            document.getElementById('panel-type').innerText = room.type;
-            document.getElementById('panel-capacity').innerText = room.capacity + ' giường';
-            document.getElementById('panel-price').innerText = room.price.toLocaleString('vi-VN') + ' VND';
-
-            document.getElementById('detail-panel').classList.add('open');
-            document.getElementById('panel-backdrop').classList.add('open');
-        }
-
-        function closeDetailPanel() {
-            document.getElementById('detail-panel').classList.remove('open');
-            document.getElementById('panel-backdrop').classList.remove('open');
         }
 
         // Navigation Steps
         function nextStep() {
-            // Check that a room was selected
             if (!selectedRoomId) {
                 alert('Vui lòng chọn phòng dự kiến trước khi tiếp tục!');
                 return;
@@ -809,7 +688,7 @@
             const duration = document.getElementById('crit-duration').value;
             document.getElementById('summary-crit-info').innerHTML = `<strong>Số người ở:</strong> ${occupants} <br><strong>Khu vực mong muốn:</strong> ${area} | <strong>Thời hạn:</strong> ${duration}`;
 
-            const room = roomsDatabase.find(r => r.id === selectedRoomId);
+            const room = SHARED_ROOMS_DATABASE.find(r => r.id === selectedRoomId);
             document.getElementById('summary-room-info').innerHTML = `<strong>Phòng:</strong> ${room.id} (${room.area} - Phòng ${room.type}) <br><strong>Giá thuê:</strong> ${room.price.toLocaleString('vi-VN')} VND/tháng`;
 
             // Default appt date to tomorrow
@@ -839,7 +718,6 @@
         function checkTimeConflict() {
             const timeVal = document.getElementById('appt-time').value;
             const conflictAlert = document.getElementById('schedule-conflict-alert');
-            // Mock: conflict if time is 14:00
             if (timeVal === "14:00") {
                 conflictAlert.style.display = 'flex';
             } else {
@@ -901,8 +779,20 @@
             document.getElementById('success-container').style.display = 'none';
         }
 
+        function logout() {
+            localStorage.removeItem('user_role');
+            window.location.href = 'dang-nhap.html';
+        }
+
+        // Attach event listeners to input criteria for automatic synchronization
+        document.getElementById('crit-area').addEventListener('change', triggerFilter);
+        document.getElementById('crit-type').addEventListener('change', triggerFilter);
+        document.getElementById('cust-gender').addEventListener('change', triggerFilter);
+        document.getElementById('crit-price').addEventListener('change', triggerFilter);
+        document.getElementById('crit-occupants').addEventListener('input', triggerFilter);
+
         // Load initially
-        triggerFilter();
+        setTimeout(triggerFilter, 100);
     </script>
 
 </body>
