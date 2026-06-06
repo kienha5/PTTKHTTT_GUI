@@ -1,0 +1,40 @@
+Người 1 — Dùng chung & Tra cứu (6 màn)
+    Đăng nhập
+    Dashboard Sale
+    Dashboard Quản lý
+    Dashboard Kế toán
+    Tra cứu phòng/giường
+    Danh sách phòng (cap-nhat-trang-thai Màn 1)
+
+Người 2 — Luồng Sale: Tiếp nhận → Đặt cọc (7 màn)
+    Nhập thông tin khách hàng & tiêu chí 
+    Đặt lịch hẹn xem phòng 
+    Thông tin KH & phòng (LapPhieuDatCoc B1) 
+    Tính tiền cọc & hướng dẫn (LapPhieuDatCoc B2) 
+    Xác nhận & tạo phiếu (LapPhieuDatCoc B3) 
+    Nhập chứng từ thanh toán 
+    Xác nhận ghi nhận đặt cọc 
+
+Người 3 — Luồng nhận phòng (7 màn)
+    Kiểm tra điều kiện cư trú
+    Thông tin hợp đồng
+    Điều khoản & xác nhận ký
+    Phiếu thu kỳ đầu
+    Xác nhận thu tiền kỳ đầu
+    Kiểm tra hiện trạng & danh sách tài sản
+    Biên bản bàn giao
+
+Người 4 — Luồng trả phòng (8 màn)
+    Tìm hợp đồng 
+    Form đăng ký trả phòng 
+    Biên bản bàn giao ban đầu 
+    Kiểm tra hiện trạng thực tế 
+    Kết quả đối soát tài sản 
+    Tính toán chi phí khấu trừ
+    Phiếu đối soát
+    Xác nhận thanh lý hợp đồng
+
+Người 5 — Quản lý phòng & Hạ tầng UI (2 màn + extra)
+    Danh sách phòng 
+    Form cập nhật trạng thái 
+    Design system 
