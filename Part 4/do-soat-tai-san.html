@@ -13,7 +13,524 @@
     <link rel="stylesheet" href="../assets/css/variables.css">
     <link rel="stylesheet" href="../assets/css/components.css">
     <link rel="stylesheet" href="../assets/css/layout.css">
-    <!-- Copy <style> từ file style-nguoi-4.html vào đây -->
+    
+    <style>
+
+        /* =========================
+        GRID UTILITIES
+        ========================= */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 24px;
+        }
+
+        /* =========================
+        BREADCRUMB
+        ========================= */
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--gray-500);
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        .breadcrumb span {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* =========================
+        WIZARD STEP INDICATOR
+        ========================= */
+        .wizard-steps {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            background: white;
+            padding: 20px 32px;
+            border-radius: 16px;
+            border: 1px solid var(--gray-200);
+            box-shadow: var(--shadow-sm);
+        }
+        .wizard-step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--gray-400);
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .wizard-step.active { color: var(--primary); }
+        .wizard-step.active .step-num {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+        .wizard-step.completed { color: var(--success); }
+        .wizard-step.completed .step-num {
+            background: var(--success);
+            color: white;
+        }
+        .step-num {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--gray-200);
+            color: var(--gray-600);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            font-weight: 700;
+            flex-shrink: 0;
+            transition: all 0.25s ease;
+        }
+        .step-line {
+            flex: 1;
+            height: 2px;
+            background: var(--gray-200);
+            margin: 0 16px;
+            transition: background 0.25s ease;
+        }
+        .step-line.active { background: var(--primary); }
+
+        /* =========================
+        WIZARD CONTENT TOGGLE
+        ========================= */
+        .step-content { display: none; }
+        .step-content.active { display: block; }
+
+        /* =========================
+        BUTTON STATES
+        ========================= */
+        .btn:disabled,
+        .btn[disabled] {
+            opacity: 0.45;
+            cursor: not-allowed;
+            transform: none !important;
+            pointer-events: none;
+        }
+        .btn-secondary {
+            background: var(--gray-100);
+            color: var(--gray-700);
+            border: 1px solid var(--gray-300);
+        }
+        .btn-secondary:hover { background: var(--gray-200); }
+
+        /* =========================
+        ALERT BOXES
+        ========================= */
+        .alert {
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            font-weight: 500;
+        }
+        .alert-warning {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            color: #b45309;
+        }
+        .alert-danger {
+            background: #fef2f2;
+            border: 1px solid #fee2e2;
+            color: var(--danger);
+        }
+        .alert-success {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #15803d;
+        }
+        .alert-info {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1e40af;
+        }
+
+        /* =========================
+        CALCULATION BOX
+        ========================= */
+        .calc-box {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .calc-box h4 {
+            font-size: 14px;
+            color: var(--gray-500);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .calc-result {
+            font-size: 28px;
+            font-weight: 800;
+        }
+        .calc-result.positive { color: var(--success); }
+        .calc-result.negative { color: var(--danger); }
+
+        .calc-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+        .calc-table td {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--gray-200);
+            font-size: 14px;
+        }
+        .calc-table td:last-child {
+            text-align: right;
+            font-weight: 600;
+        }
+        .calc-table tr.total-row td {
+            border-top: 2px solid var(--gray-300);
+            border-bottom: none;
+            font-weight: 800;
+            font-size: 16px;
+            padding-top: 14px;
+            color: var(--gray-800);
+        }
+        .calc-table tr.deduct-row td { color: var(--danger); }
+        .calc-table tr.refund-row td {
+            color: var(--success);
+            font-weight: 800;
+            font-size: 15px;
+        }
+        .calc-table tr.payable-row td {
+            color: var(--danger);
+            font-weight: 800;
+            font-size: 15px;
+        }
+
+        /* =========================
+        REFUND RATE TABLE
+        ========================= */
+        .refund-rate-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        .refund-rate-table th {
+            background: var(--gray-100);
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 700;
+            color: var(--gray-700);
+        }
+        .refund-rate-table td {
+            padding: 12px 16px;
+            border-top: 1px solid var(--gray-200);
+        }
+        .refund-rate-table tr.active-row {
+            background: var(--primary-light);
+            font-weight: 700;
+        }
+        .refund-rate-table tr.active-row td { color: var(--primary-hover); }
+
+        /* =========================
+        ROLE SECTION
+        ========================= */
+        .role-section {
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .role-section-kt {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+        }
+        .role-section-ql {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+        }
+        .role-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            margin-bottom: 16px;
+        }
+        .role-label-kt { background: #bfdbfe; color: #1e40af; }
+        .role-label-ql { background: #bbf7d0; color: #15803d; }
+
+        /* =========================
+        DEDUCTION INPUT ROW
+        ========================= */
+        .deduct-row-input {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 12px;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        .deduct-row-input:last-child { border-bottom: none; }
+
+        .deduct-label { font-size: 14px; font-weight: 600; color: var(--gray-700); }
+        .deduct-sub   { font-size: 12px; color: var(--gray-400); margin-top: 2px; }
+
+        .deduct-amount-input {
+            width: 180px;
+            padding: 10px 14px;
+            border: 1px solid var(--gray-300);
+            border-radius: 10px;
+            outline: none;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: right;
+            transition: 0.25s;
+            background: white;
+        }
+        .deduct-amount-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(37,99,235,.15);
+        }
+
+        .btn-remove-deduct {
+            background: none;
+            border: 1px solid var(--gray-300);
+            color: var(--gray-400);
+            border-radius: 8px;
+            padding: 8px 10px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 16px;
+        }
+        .btn-remove-deduct:hover {
+            border-color: var(--danger);
+            color: var(--danger);
+            background: #fef2f2;
+        }
+
+        /* =========================
+        REALTIME RESULT BOX
+        ========================= */
+        .result-box {
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .result-box.refund-mode {
+            background: #f0fdf4;
+            border: 2px solid #86efac;
+        }
+        .result-box.payable-mode {
+            background: #fef2f2;
+            border: 2px solid #fca5a5;
+        }
+        .result-box .result-label {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        .result-box.refund-mode .result-label  { color: #15803d; }
+        .result-box.payable-mode .result-label { color: #b91c1c; }
+
+        .result-box .result-amount {
+            font-size: 36px;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+        .result-box.refund-mode .result-amount  { color: var(--success); }
+        .result-box.payable-mode .result-amount { color: var(--danger); }
+
+        .result-box .result-sub {
+            font-size: 13px;
+            color: var(--gray-500);
+        }
+
+        /* =========================
+        PHIẾU ĐỐI SOÁT (STEP 2)
+        ========================= */
+        .phieu-header {
+            text-align: center;
+            padding: 24px;
+            border-bottom: 2px solid var(--gray-200);
+            margin-bottom: 24px;
+        }
+        .phieu-header h2 {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--gray-800);
+            margin-bottom: 4px;
+        }
+        .phieu-header p {
+            font-size: 13px;
+            color: var(--gray-500);
+        }
+
+        .phieu-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px 32px;
+            margin-bottom: 24px;
+        }
+        .phieu-info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 8px 0;
+            border-bottom: 1px dashed var(--gray-200);
+            font-size: 14px;
+        }
+        .phieu-info-row .pi-label { color: var(--gray-500); }
+        .phieu-info-row .pi-value { font-weight: 700; color: var(--gray-800); }
+
+        .phieu-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .phieu-table th {
+            background: var(--gray-800);
+            color: white;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 700;
+        }
+        .phieu-table th:last-child { text-align: right; }
+        .phieu-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        .phieu-table td:last-child { text-align: right; font-weight: 600; }
+        .phieu-table tr.section-header td {
+            background: var(--gray-100);
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray-600);
+        }
+        .phieu-table tr.deduct-item td { color: var(--danger); }
+        .phieu-table tr.final-row td {
+            background: var(--gray-50);
+            font-weight: 800;
+            font-size: 16px;
+            border-top: 2px solid var(--gray-300);
+            border-bottom: 2px solid var(--gray-300);
+        }
+        .phieu-table tr.final-positive td { color: var(--success); }
+        .phieu-table tr.final-negative td { color: var(--danger); }
+
+        /* =========================
+        STEP 3 — CHECKLIST
+        ========================= */
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 16px;
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .checklist-item:hover { border-color: var(--primary); background: var(--gray-50); }
+        .checklist-item.checked {
+            border-color: var(--success);
+            background: #f0fdf4;
+        }
+        .checklist-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--success);
+            cursor: pointer;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .checklist-item .ci-title {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--gray-800);
+            margin-bottom: 4px;
+        }
+        .checklist-item .ci-sub {
+            font-size: 13px;
+            color: var(--gray-500);
+        }
+
+        /* =========================
+        CONDITIONAL SECTIONS (Step 3)
+        ========================= */
+        .cond-section {
+            display: none;
+            margin-bottom: 16px;
+        }
+        .cond-section.visible { display: block; }
+
+        /* =========================
+        SUCCESS SCREEN
+        ========================= */
+        .success-screen {
+            text-align: center;
+            padding: 48px 24px;
+        }
+        .success-icon {
+            width: 72px;
+            height: 72px;
+            background: var(--status-empty-bg);
+            color: var(--status-empty-text);
+            border-radius: 50%;
+            font-size: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+        .success-info-box {
+            background: var(--gray-100);
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 16px 24px;
+            display: inline-block;
+            text-align: left;
+            margin-bottom: 24px;
+            min-width: 360px;
+        }
+        .success-info-box div {
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        .success-info-box div:last-child { margin-bottom: 0; }
+
+        /* =========================
+        DISPUTE SECTION
+        ========================= */
+        .dispute-banner {
+            background: #fef3c7;
+            border: 2px solid #fbbf24;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .dispute-banner.visible { display: block; }
+
+    </style>
 </head>
 
 <body>
