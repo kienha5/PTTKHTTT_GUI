@@ -155,7 +155,7 @@
         <div class="logo">HomeStay Dorm</div>
         <div class="menu-title">NGHIỆP VỤ QUẢN LÝ</div>
         <ul class="sidebar-menu">
-          <li><a href="room-list.html">🏠 Dashboard Quản lý</a></li>
+          <li><a href="dashboard-quan-ly.html">🏠 Dashboard Quản lý</a></li>
           <li>
             <a class="active" href="lap-hop-dong-thue.html"
               >📝 Lập hợp đồng thuê</a
@@ -170,7 +170,7 @@
         <header class="header">
           <h3>Phân hệ Quản lý</h3>
           <div class="user-box">
-            <div class="user-avatar" style="background: var(--warning)">QL</div>
+            <div class="user-avatar">QL</div>
             <div>
               <strong>Trần Văn C</strong><br />
               Quản lý
@@ -425,14 +425,7 @@
             </div>
             <div class="page-actions">
               <button class="btn" onclick="goToStep(2)">⬅ Quay lại</button>
-              <button
-                class="btn btn-success"
-                onclick="
-                  alert(
-                    'Tạo hợp đồng thành công! Đã gửi trigger thông báo sang Kế toán để thu tiền kỳ đầu.',
-                  )
-                "
-              >
+              <button class="btn btn-success" onclick="completeContract()">
                 ✓ Tạo hợp đồng & Chuyển Thanh toán
               </button>
             </div>
@@ -666,6 +659,20 @@
         } else {
           alertBox.style.display = "none";
         }
+      }
+
+      function completeContract() {
+        const isAgreed = document.getElementById("agree").checked;
+        if (!isAgreed) {
+          alert(
+            "Vui lòng tích xác nhận: Khách hàng đã đọc và đồng ý toàn bộ điều khoản!",
+          );
+          return;
+        }
+        alert(
+          "Tạo hợp đồng thành công! Hệ thống sẽ tự động chuyển sang phân hệ Kế toán để thu tiền kỳ đầu.",
+        );
+        window.location.href = "thanh-toan-ky-dau.html";
       }
 
       window.onload = function () {
